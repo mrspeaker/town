@@ -21,6 +21,10 @@ things.load.then(() => {
   roof.rotation.set(0, 0, 0);
   house.add(roof);
 
+  house.traverse(o => {
+    o.castShadow = true;
+    o.receiveShadow = true
+  });
   return house;
 
 });
