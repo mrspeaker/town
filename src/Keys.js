@@ -2,6 +2,7 @@ class Keys {
 
   constructor () {
     this._keys = [];
+    this.m = new THREE.Vector2();
     document.addEventListener('keydown', e => {
       if ([37, 38, 39, 40].indexOf(e.which) >= 0) {
         e.preventDefault();
@@ -11,6 +12,13 @@ class Keys {
     document.addEventListener('keyup', e => {
       this._keys[e.which] = 0;
     }, false);
+
+    document.addEventListener('mousemove', e => {
+      event.preventDefault();
+      this.m.x = ( e.clientX / window.innerWidth ) * 2 - 1;
+      this.m.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
+    }, false);
+
   }
 
   x () {
@@ -29,6 +37,10 @@ class Keys {
     var left = !!(this._keys[65]);
     var right = !!(this._keys[68]);
     return -left + right;
+  }
+
+  mouse () {
+    return this.m;
   }
 
 

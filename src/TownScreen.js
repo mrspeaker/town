@@ -84,6 +84,9 @@ const TownScreen = (camera) => {
 
   scene.add(house2);
 
+    camera.position.y = 1;
+    const raycaster = new THREE.Raycaster();
+
   const tick = (dt) => {
     t.rotation.y += 0.001 * dt;
     const x = keys.x();
@@ -99,11 +102,15 @@ const TownScreen = (camera) => {
       camera.rotation.y += -rot * dt * 0.002;
     }
 
-    //camera.position.z = (Math.abs(Math.sin(Date.now() / 5000)) * 10) - 30;
-    //camera.position.x = (Math.sin(Date.now() / 1000) * 5);
-    camera.position.y = 1;
+    // update the picking ray with the camera and mouse position
+  raycaster.setFromCamera( keys.mouse(), camera );
 
-    //spotLight.position.y += Math.sin(Date.now() / 1000) * 0.01
+  // calculate objects intersecting the picking ray
+  var intersects = raycaster.intersectObjects( scene.children );
+
+    if ( intersects.length > 0 ) {
+      console.log(intersects);
+    }
   }
 
   return {
