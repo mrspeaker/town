@@ -81,14 +81,14 @@ const TownScreen = (camera) => {
 
   const house = House();
   house.position.set(5, -0.3, -3);
-  house.rotation.y = Math.PI / 3;
+  house.rotation.y = Math.PI / 2;
   scene.add(house);
   house.traverse(h => h.userData.parent = house);
   selectables.push(house);
 
   const house2 = House();
   house2.position.set(-5, -0.3, -3);
-  house2.rotation.y = Math.PI / 3;
+  house2.rotation.y = Math.PI / 2;
   house2.traverse(h => h.userData.parent = house2);
 
   scene.add(house2);
@@ -112,26 +112,70 @@ const TownScreen = (camera) => {
       camera.rotation.y += -rot * dt * 0.002;
     }
 
+    let addX = 0;
+    let addZ = 0;
+    let p1;
     if (keys.m.down) {
       raycaster.setFromCamera(keys.mouse(), camera);
       const intersects = raycaster.intersectObjects(selectables, true);
       const n = Date.now();
-      intersects.forEach(i => {
-        const p = i.object.userData.parent;
+      intersects.forEach(({ distance, point, face, faceIndex, indices, object }) => {
+        const p = object.userData.parent;
         if(!p || p.userData.changed === n) return;
         p.userData.changed = n;
-        p.translateZ(Math.random() < 0.5 ? 0.3 : -0.3);
+        //p.translateZ(Math.random() < 0.5 ? 0.3 : -0.3);
 
-        if (i.object.material === mat) {
-          i.object.material = i.object._oldMat;
+        console.log(distance, point, face, faceIndex)
+
+        if (face.normal.z < -0.8) {
+          addX = -1;
+          p1 = p;
+
+        } else if (face.normal.z > 0.8) {
+          addX = 1;
+          p1 = p;
+        }
+
+        if (face.normal.x < -0.8) {
+          addZ = -1;
+          p1 = p;
+
+        } else if (face.normal.x > 0.8) {
+          addZ = 1;
+          p1 = p;
+        }
+
+        if (object.material === mat) {
+          object.material = object._oldMat;
         } else {
-          i.object._oldMat = i.object.material;
-          i.object.material = mat;
+          object._oldMat = object.material;
+          object.material = mat;
         }
       });
 
+      if (addX !== 0) {
+        const l = House();
+        l.position.copy(p1.position);
+        l.rotation.copy(p1.rotation);
+        l.position.x += addX * 3;
+        l.traverse(h => h.userData.parent = l);
+        selectables.push(l);
+        scene.add(l);
+      }
+
+      if (addZ !== 0) {
+        const l = House();
+        l.position.copy(p1.position);
+        l.rotation.copy(p1.rotation);
+        l.position.z -= addZ * 3.5;
+        l.traverse(h => h.userData.parent = l);
+        selectables.push(l);
+        scene.add(l);
+      }
+
       keys.m.down = false;
     }
+
   }
 
   return {
