@@ -22,7 +22,7 @@ class Keys {
     }, false);
 
     document.addEventListener('mousemove', e => {
-      event.preventDefault();
+      e.preventDefault();
       this.m.x = ( e.clientX / window.innerWidth ) * 2 - 1;
       this.m.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
     }, false);
