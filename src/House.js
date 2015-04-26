@@ -22,9 +22,11 @@ things.load.then(() => {
   house.add(roof);
 
   house.traverse(o => {
+    if (o === house) return;
     o.castShadow = true;
-    o.receiveShadow = true
+    o.receiveShadow = true;
   });
+
   return house;
 
 });

@@ -65,36 +65,40 @@ const TownScreen = (camera) => {
   ground.receiveShadow = true;
   scene.add(ground);
 
-  let t;
   for (var i =0; i < 10; i++) {
     const t2 = things.o.tree.clone();
+    t2.name = "tree";
     t2.castShadow = true;
-    t2.traverse(o => o.castShadow = true);
+    t2.traverse(o => {
+      o.castShadow = true;
+      //o.userData.parent = t2;
+    });
     t2.position.set((i - 5) * 2 + 1.5, 0.1, 0);
     t2.rotation.set(0, 0, 0);
     scene.add(t2);
     selectables.push(t2);
-    t = t2;
   }
 
   const house = House();
   house.position.set(5, -0.3, -3);
   house.rotation.y = Math.PI / 3;
   scene.add(house);
+  house.traverse(h => h.userData.parent = house);
   selectables.push(house);
 
   const house2 = House();
   house2.position.set(-5, -0.3, -3);
   house2.rotation.y = Math.PI / 3;
+  house2.traverse(h => h.userData.parent = house2);
 
   scene.add(house2);
   selectables.push(house2);
 
-    camera.position.set(0, 1, 5);
-    const raycaster = new THREE.Raycaster();
+  camera.position.set(0, 1, 5);
+  const raycaster = new THREE.Raycaster();
 
   const tick = (dt) => {
-    t.rotation.y += 0.001 * dt;
+
     const x = keys.x();
     if (x) {
       camera.translateX(x * dt * 0.01);
@@ -111,16 +115,18 @@ const TownScreen = (camera) => {
     if (keys.m.down) {
       raycaster.setFromCamera(keys.mouse(), camera);
       const intersects = raycaster.intersectObjects(selectables, true);
-      const ch = Math.random();
+      const n = Date.now();
       intersects.forEach(i => {
-        if (ch !== i.object.ch) {
-          i.object.ch = ch;
-          if (i.object.material === mat) {
-            i.object.material = i.object._oldMat;
-          } else {
-            i.object._oldMat = i.object.material;
-            i.object.material = mat;
-          }
+        const p = i.object.userData.parent;
+        if(!p || p.userData.changed === n) return;
+        p.userData.changed = n;
+        p.translateZ(Math.random() < 0.5 ? 0.3 : -0.3);
+
+        if (i.object.material === mat) {
+          i.object.material = i.object._oldMat;
+        } else {
+          i.object._oldMat = i.object.material;
+          i.object.material = mat;
         }
       });
 
