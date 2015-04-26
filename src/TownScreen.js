@@ -7,6 +7,7 @@ import Keys from './Keys';
 const TownScreen = (camera) => {
 
   const keys = new Keys();
+  const selectables = [];
 
   const scene = new THREE.Scene();
   //scene.add(new THREE.AmbientLight(0x777777));
@@ -56,6 +57,8 @@ const TownScreen = (camera) => {
 
   //scene.add(spotLight);
 
+  const mat = new THREE.MeshPhongMaterial({color:0x550000 });
+
   const ground = Ground();
   ground.position.set(0, -0.2, 0);
   ground.rotation.set(-Math.PI / 2, 0, 0);
@@ -70,6 +73,7 @@ const TownScreen = (camera) => {
     t2.position.set((i - 5) * 2 + 1.5, 0.1, 0);
     t2.rotation.set(0, 0, 0);
     scene.add(t2);
+    selectables.push(t2);
     t = t2;
   }
 
@@ -77,14 +81,16 @@ const TownScreen = (camera) => {
   house.position.set(5, -0.3, -3);
   house.rotation.y = Math.PI / 3;
   scene.add(house);
+  selectables.push(house);
 
   const house2 = House();
   house2.position.set(-5, -0.3, -3);
   house2.rotation.y = Math.PI / 3;
 
   scene.add(house2);
+  selectables.push(house2);
 
-    camera.position.y = 1;
+    camera.position.set(0, 1, 5);
     const raycaster = new THREE.Raycaster();
 
   const tick = (dt) => {
@@ -102,14 +108,23 @@ const TownScreen = (camera) => {
       camera.rotation.y += -rot * dt * 0.002;
     }
 
-    // update the picking ray with the camera and mouse position
-  raycaster.setFromCamera( keys.mouse(), camera );
+    if (keys.m.down) {
+      raycaster.setFromCamera(keys.mouse(), camera);
+      const intersects = raycaster.intersectObjects(selectables, true);
+      const ch = Math.random();
+      intersects.forEach(i => {
+        if (ch !== i.object.ch) {
+          i.object.ch = ch;
+          if (i.object.material === mat) {
+            i.object.material = i.object._oldMat;
+          } else {
+            i.object._oldMat = i.object.material;
+            i.object.material = mat;
+          }
+        }
+      });
 
-  // calculate objects intersecting the picking ray
-  var intersects = raycaster.intersectObjects( scene.children );
-
-    if ( intersects.length > 0 ) {
-      console.log(intersects);
+      keys.m.down = false;
     }
   }
 
