@@ -3,27 +3,26 @@ import things from './things';
 import House from './House';
 import Ground from './Ground';
 import Keys from './Keys';
+import Chunk from './Chunk';
 
 const TownScreen = (camera) => {
 
   const keys = new Keys();
   const selectables = [];
 
+
   const scene = new THREE.Scene();
-  //scene.add(new THREE.AmbientLight(0x777777));
-   var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
-    hemiLight.color.setHSL( 0.6, 0.75, 0.5 );
-    hemiLight.groundColor.setHSL( 0.095, 0.5, 0.5 );
-    hemiLight.position.set( 0, 200, 0 );
-    scene.add( hemiLight );
-  //const light2 = new THREE.DirectionalLight(0xffffff, 0.1);
-  //light2.position.set(0, 0, 10);
-  //scene.add(light2);
+  var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
+  hemiLight.color.setHSL( 0.6, 0.75, 0.5 );
+  hemiLight.groundColor.setHSL( 0.095, 0.5, 0.5 );
+  hemiLight.position.set( 0, 200, 0 );
+  scene.add( hemiLight );
 
   var dirLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
-            dirLight.position.set( -1, 0.75, 1 );
-            dirLight.position.multiplyScalar(50);
+  dirLight.position.set( -1, 0.75, 1 );
+  dirLight.position.multiplyScalar(50);
   scene.add(dirLight)
+
   dirLight.shadowCameraNear = 60;
   dirLight.shadowCameraFar = 160;
   dirLight.shadowCameraLeft = -10.5;
@@ -34,28 +33,7 @@ const TownScreen = (camera) => {
 
   dirLight.castShadow = true;
   //dirLight.shadowCameraVisible = true;
-    dirLight.shadowDarkness = 0.1 ;
-  /*const spotLight = new THREE.DirectionalLight(0x777777, 0.6);
-  //spotLight.shadowCameraVisible = true;
-  spotLight.position.set(0, 3.8, -20);
-
-  const tar = new THREE.Object3D();
-  tar.position.set(0, 3.3, -21);
-  scene.add(tar);
-  spotLight.target = tar;
-
-  spotLight.shadowCameraNear = 0.1;
-  spotLight.shadowCameraFar = 25;
-
-  spotLight.shadowCameraLeft = -12;
-  spotLight.shadowCameraRight = 12;
-  spotLight.shadowCameraTop = 10;
-  spotLight.shadowCameraBottom = -10;
-
-  spotLight.castShadow = true;
-  spotLight.shadowDarkness = 0.4  ;*/
-
-  //scene.add(spotLight);
+  dirLight.shadowDarkness = 0.1 ;
 
   const mat = new THREE.MeshPhongMaterial({color:0x550000 });
 
@@ -64,6 +42,8 @@ const TownScreen = (camera) => {
   ground.rotation.set(-Math.PI / 2, 0, 0);
   ground.receiveShadow = true;
   scene.add(ground);
+
+  const chunk = new Chunk(scene);
 
   for (var i =0; i < 10; i++) {
     const t2 = things.o.tree.clone();
@@ -111,6 +91,8 @@ const TownScreen = (camera) => {
     if (rot) {
       camera.rotation.y += -rot * dt * 0.002;
     }
+
+    chunk.tick(dt);
 
     let addX = 0;
     let addZ = 0;
