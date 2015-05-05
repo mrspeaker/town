@@ -52,11 +52,11 @@ class Chunk {
 
   getBlock({x, y, z}) {
 
-  },
+  }
 
   getBelow({x, y, z}) {
 
-  },
+  }
 
   evolve () {
 
@@ -100,8 +100,8 @@ class Chunk {
 
   tick (dt) {
     this.time += dt;
-    if (this.time > 300) {
-      this.time -= 300;
+    if (this.time > 2300) {
+      this.time -= 2300;
       this.evolve();
     }
   }

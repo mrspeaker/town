@@ -17,7 +17,7 @@ things.load.then(() => {
   house.add(wall2);
 
   const roof = things.o.roof.clone();
-  roof.position.set(1.45, 0.85, -1.65);
+  roof.position.set(0, 1.8, 0);
   roof.rotation.set(0, 0, 0);
   house.add(roof);
 

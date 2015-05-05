@@ -1,6 +1,7 @@
 import env from './env';
 import things from './things';
 import House from './House';
+import Thing from './Thing';
 import Ground from './Ground';
 import Keys from './Keys';
 import Chunk from './Chunk';
@@ -36,6 +37,14 @@ const TownScreen = (camera) => {
   dirLight.shadowDarkness = 0.1 ;
 
   const mat = new THREE.MeshPhongMaterial({color:0x550000 });
+
+  things.load.then(() => {
+    for (var i = 0; i < 10; i++) {
+      const r = () => Math.random() * 20 - 10;
+      scene.add(Thing('fire', {x: r(), y: 0, z: r()}));
+      scene.add(Thing('trunk', {x: r(), y: -0.3, z: r()}));
+    }
+  });
 
   const ground = Ground();
   ground.position.set(0, -0.2, 0);
@@ -99,15 +108,24 @@ const TownScreen = (camera) => {
     let p1;
     if (keys.m.down) {
       raycaster.setFromCamera(keys.mouse(), camera);
+
+      const gin = raycaster.intersectObject(ground);
+      console.log(gin);
+
+
       const intersects = raycaster.intersectObjects(selectables, true);
       const n = Date.now();
-      intersects.forEach(({ distance, point, face, faceIndex, indices, object }) => {
+      console.log(intersects.length, 'le');
+      intersects
+        //.sort((a, b) => b.distance - a.distance)
+        .forEach(({ distance, point, face, faceIndex, indices, object }) => {
+        console.log(distance);
         const p = object.userData.parent;
         if(!p || p.userData.changed === n) return;
         p.userData.changed = n;
         //p.translateZ(Math.random() < 0.5 ? 0.3 : -0.3);
 
-        console.log(distance, point, face, faceIndex)
+        //console.log(distance, point, face, faceIndex)
 
         if (face.normal.z < -0.8) {
           addX = -1;

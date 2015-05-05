@@ -1,6 +1,8 @@
+const lol = 10;
+
 const env = {
-  w: window.innerWidth,
-  h: window.innerHeight,
+  w: window.innerWidth - lol,
+  h: window.innerHeight - lol,
   onResize(handler) {
     handlers.push(handler);
   }
@@ -8,8 +10,8 @@ const env = {
 
 const handlers = [];
 window.addEventListener('resize', () => {
-  env.w = window.innerWidth;
-  env.h = window.innerHeight;
+  env.w = window.innerWidth - lol;
+  env.h = window.innerHeight - lol;
   handlers.forEach(h => h(env));
 }, false);
 

@@ -1,10 +1,11 @@
 import manager from './loaderManager';
 
 const objectsToLoad = [
-  { name: 'roof', file: 'test' },
-  { name: 'banner', file: 'Banner_01' },
-  { name: 'tree', file: 'Tree_01' },
-  { name: 'wall', file: 'Wood_Border_Wall_01' }
+  { name: 'roof', file: 'villiage/Roof_Point_Green_01' },
+  { name: 'fire', file: 'nature/Campfire_01' },
+  { name: 'trunk', file: 'nature/Tent_01' },
+  { name: 'tree', file: 'villiage/Tree_01' },
+  { name: 'wall', file: 'villiage/Wood_Window_Round_01' }
 ];
 
 const loader = new THREE.OBJMTLLoader(manager);
