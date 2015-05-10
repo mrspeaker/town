@@ -11,7 +11,6 @@ const TownScreen = (camera) => {
   const keys = new Keys();
   const selectables = [];
 
-
   const scene = new THREE.Scene();
   var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
   hemiLight.color.setHSL( 0.6, 0.75, 0.5 );
@@ -103,14 +102,15 @@ const TownScreen = (camera) => {
 
     chunk.tick(dt);
 
+    /*
     let addX = 0;
     let addZ = 0;
     let p1;
+
     if (keys.m.down) {
       raycaster.setFromCamera(keys.mouse(), camera);
 
-      const gin = raycaster.intersectObject(ground);
-      console.log(gin);
+      //const gin = raycaster.intersectObject(ground);
 
 
       const intersects = raycaster.intersectObjects(selectables, true);
@@ -175,12 +175,13 @@ const TownScreen = (camera) => {
 
       keys.m.down = false;
     }
-
+    */
   }
 
   return {
     scene,
-    tick
+    tick,
+    keys
   };
 
 };

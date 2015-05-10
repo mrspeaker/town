@@ -20,6 +20,9 @@ things.load.then(() => {
 
   const screen = TownScreen(camera);
 
+  const controls = new THREE.PointerLockControls(camera);
+  screen.scene.add( controls.getObject() );
+
   let last, start, dt;
   function animate (time) {
 
@@ -31,6 +34,8 @@ things.load.then(() => {
     requestAnimationFrame(animate);
 
     r.render(screen.scene, camera);
+
+    controls.enabled = screen.keys.m.down;
 
     screen.tick(dt);
   };
